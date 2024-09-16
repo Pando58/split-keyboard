@@ -1,0 +1,7 @@
+#pragma once
+
+#define RP_I2C_ADDRESS 4
+#define OLED_I2C_ADDRESS 0x3C
+
+#define TOTAL_KEYS_ONE_SIDE 25
+#define TOTAL_KEYS_BOTH_SIDES 50
