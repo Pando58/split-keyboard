@@ -21,18 +21,21 @@ uint8_t serial_keymap_release[TOTAL_KEYS_ONE_SIDE] = {
 };
 // clang-format on
 
-void serial_keymap::readKeys(void (*onKeyChange)(uint8_t index, bool pressed)) {
+serial_keymap::KeyReader::KeyReader(void (*onKeyChange)(uint8_t index, bool pressed))
+	: m_onKeyChange(onKeyChange) {}
+
+void serial_keymap::KeyReader::readKeys() {
 	while (Serial.available()) {
 		uint8_t data = Serial.read();
 
 		for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
 			if (data == serial_keymap_press[i]) {
-				onKeyChange(i, true);
+				m_onKeyChange(i, true);
 				break;
 			}
 
 			if (data == serial_keymap_release[i]) {
-				onKeyChange(i, false);
+				m_onKeyChange(i, false);
 				break;
 			}
 		}

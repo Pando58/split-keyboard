@@ -20,6 +20,8 @@ void onKeyChange(uint8_t index, bool pressed) {
 	display0.display();
 }
 
+serial_keymap::KeyReader key_reader(&onKeyChange);
+
 void setup() {
 	Serial.begin(115200);
 
@@ -53,5 +55,5 @@ void setup() {
 }
 
 void loop() {
-	serial_keymap::readKeys(&onKeyChange);
+	key_reader.readKeys();
 }

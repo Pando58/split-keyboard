@@ -4,6 +4,13 @@
 
 namespace serial_keymap {
 
-void readKeys(void (*onKeyChange)(uint8_t index, bool pressed));
+class KeyReader {
+	void (*m_onKeyChange)(uint8_t index, bool pressed);
+
+  public:
+	KeyReader(void (*onKeyChange)(uint8_t index, bool pressed));
+
+	void readKeys();
+};
 
 }
