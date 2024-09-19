@@ -1,6 +1,7 @@
 #include "defines.h"
 #include "key_reader_serial.h"
-#include "keyboard_drawing.h"
+#include "scene.h"
+#include "scenes.h"
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
 #include <Wire.h>
@@ -10,14 +11,13 @@ Adafruit_SSD1306 display1(128, 64, &Wire1);
 
 bool keys_pressed[TOTAL_KEYS_ONE_SIDE];
 
+scenes::KeyboardMode scene_keyboard_mode(&display0, &display1);
+scene::Scene *current_scene = &scene_keyboard_mode;
+
 void onKeyChange(uint8_t index, bool pressed) {
 	keys_pressed[index] = pressed;
 
-	int8_t x = keyboard_drawing::get_position_x(index);
-	int8_t y = keyboard_drawing::get_position_y(index);
-
-	display0.fillRect(x + 3, y + 3, 5, 5, pressed ? SSD1306_WHITE : SSD1306_BLACK);
-	display0.display();
+	current_scene->onKeyChange(index, pressed);
 }
 
 key_reader_serial::KeyReader key_reader(&onKeyChange);
@@ -42,16 +42,7 @@ void setup() {
 			;
 	}
 
-	display0.clearDisplay();
-
-	for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
-		int8_t x = keyboard_drawing::get_position_x(i);
-		int8_t y = keyboard_drawing::get_position_y(i);
-
-		display0.drawRect(x, y, 11, 11, SSD1306_WHITE);
-	}
-
-	display0.display();
+	current_scene->enter();
 }
 
 void loop() {
