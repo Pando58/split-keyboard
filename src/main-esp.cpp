@@ -10,6 +10,16 @@ Adafruit_SSD1306 display1(128, 64, &Wire1);
 
 bool keys_pressed[TOTAL_KEYS_ONE_SIDE];
 
+void onKeyChange(uint8_t index, bool pressed) {
+	keys_pressed[index] = pressed;
+
+	int8_t x = keyboard_drawing::get_position_x(index);
+	int8_t y = keyboard_drawing::get_position_y(index);
+
+	display0.fillRect(x + 3, y + 3, 5, 5, pressed ? SSD1306_WHITE : SSD1306_BLACK);
+	display0.display();
+}
+
 void setup() {
 	Serial.begin(115200);
 
@@ -48,26 +58,12 @@ void loop() {
 
 		for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
 			if (data == serial_keymap_press[i]) {
-				keys_pressed[i] = true;
-
-				int8_t x = keyboard_drawing::get_position_x(i);
-				int8_t y = keyboard_drawing::get_position_y(i);
-
-				display0.fillRect(x + 3, y + 3, 5, 5, SSD1306_WHITE);
-				display0.display();
-
+				onKeyChange(i, true);
 				break;
 			}
 
 			if (data == serial_keymap_release[i]) {
-				keys_pressed[i] = false;
-
-				int8_t x = keyboard_drawing::get_position_x(i);
-				int8_t y = keyboard_drawing::get_position_y(i);
-
-				display0.fillRect(x + 3, y + 3, 5, 5, SSD1306_BLACK);
-				display0.display();
-
+				onKeyChange(i, false);
 				break;
 			}
 		}
