@@ -1,4 +1,4 @@
-#include "serial_keymap.h"
+#include "key_reader_serial.h"
 #include "defines.h"
 
 // clang-format off
@@ -21,10 +21,10 @@ uint8_t serial_keymap_release[TOTAL_KEYS_ONE_SIDE] = {
 };
 // clang-format on
 
-serial_keymap::KeyReader::KeyReader(void (*onKeyChange)(uint8_t index, bool pressed))
+key_reader_serial::KeyReader::KeyReader(void (*onKeyChange)(uint8_t index, bool pressed))
 	: m_onKeyChange(onKeyChange) {}
 
-void serial_keymap::KeyReader::readKeys() {
+void key_reader_serial::KeyReader::readKeys() {
 	while (Serial.available()) {
 		uint8_t data = Serial.read();
 

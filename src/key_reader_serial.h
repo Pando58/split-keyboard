@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-namespace serial_keymap {
+namespace key_reader_serial {
 
 class KeyReader {
 	void (*m_onKeyChange)(uint8_t index, bool pressed);

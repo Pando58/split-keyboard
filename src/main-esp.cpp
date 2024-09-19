@@ -1,6 +1,6 @@
 #include "defines.h"
+#include "key_reader_serial.h"
 #include "keyboard_drawing.h"
-#include "serial_keymap.h"
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
 #include <Wire.h>
@@ -20,7 +20,7 @@ void onKeyChange(uint8_t index, bool pressed) {
 	display0.display();
 }
 
-serial_keymap::KeyReader key_reader(&onKeyChange);
+key_reader_serial::KeyReader key_reader(&onKeyChange);
 
 void setup() {
 	Serial.begin(115200);
