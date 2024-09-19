@@ -53,19 +53,5 @@ void setup() {
 }
 
 void loop() {
-	while (Serial.available()) {
-		uint8_t data = Serial.read();
-
-		for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
-			if (data == serial_keymap_press[i]) {
-				onKeyChange(i, true);
-				break;
-			}
-
-			if (data == serial_keymap_release[i]) {
-				onKeyChange(i, false);
-				break;
-			}
-		}
-	}
+	serial_keymap::readKeys(&onKeyChange);
 }

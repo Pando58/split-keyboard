@@ -1,4 +1,5 @@
 #include "serial_keymap.h"
+#include "defines.h"
 
 // clang-format off
 uint8_t serial_keymap_press[TOTAL_KEYS_ONE_SIDE] = {
@@ -19,3 +20,21 @@ uint8_t serial_keymap_release[TOTAL_KEYS_ONE_SIDE] = {
 	            74, 75, 76,
 };
 // clang-format on
+
+void serial_keymap::readKeys(void (*onKeyChange)(uint8_t index, bool pressed)) {
+	while (Serial.available()) {
+		uint8_t data = Serial.read();
+
+		for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
+			if (data == serial_keymap_press[i]) {
+				onKeyChange(i, true);
+				break;
+			}
+
+			if (data == serial_keymap_release[i]) {
+				onKeyChange(i, false);
+				break;
+			}
+		}
+	}
+}
