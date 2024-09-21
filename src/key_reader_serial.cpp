@@ -20,8 +20,8 @@ uint8_t serial_keymap_release[TOTAL_KEYS_ONE_SIDE] = {
 };
 // clang-format on
 
-key_reader_serial::KeyReader::KeyReader(void (*onKeyChange)(uint8_t index, bool pressed))
-	: m_onKeyChange(onKeyChange) {}
+key_reader_serial::KeyReader::KeyReader(bool left_side, void (*onKeyChange)(uint8_t index, bool pressed))
+	: m_left_side(left_side), m_onKeyChange(onKeyChange) {}
 
 void key_reader_serial::KeyReader::readKeys() {
 	while (Serial.available()) {
@@ -30,13 +30,13 @@ void key_reader_serial::KeyReader::readKeys() {
 		for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
 			if (data == serial_keymap_press[i] && !m_keys_pressed[i]) {
 				m_keys_pressed[i] = true;
-				m_onKeyChange(i, true);
+				m_onKeyChange(m_left_side ? i : i + TOTAL_KEYS_ONE_SIDE, true);
 				break;
 			}
 
 			if (data == serial_keymap_release[i] && m_keys_pressed[i]) {
 				m_keys_pressed[i] = false;
-				m_onKeyChange(i, false);
+				m_onKeyChange(m_left_side ? i : i + TOTAL_KEYS_ONE_SIDE, false);
 				break;
 			}
 		}

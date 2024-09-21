@@ -18,7 +18,7 @@ void onKeyChange(uint8_t index, bool pressed) {
 	current_scene->onKeyChange(index, pressed);
 }
 
-key_reader_serial::KeyReader key_reader(&onKeyChange);
+key_reader_serial::KeyReader key_reader(false, &onKeyChange);
 
 void setup() {
 	Serial.begin(115200);
@@ -45,4 +45,28 @@ void setup() {
 
 void loop() {
 	key_reader.readKeys();
+
+	Wire.beginTransmission(RP_I2C_ADDRESS);
+	Wire.write(1);
+	Wire.endTransmission();
+
+	Wire.requestFrom(RP_I2C_ADDRESS, 1);
+
+	uint8_t key_buffer_length = Wire.read();
+
+	if (key_buffer_length == 0)
+		return;
+
+	Wire.beginTransmission(RP_I2C_ADDRESS);
+	Wire.write(2);
+	Wire.endTransmission();
+
+	Wire.requestFrom(RP_I2C_ADDRESS, key_buffer_length * 2);
+
+	for (uint8_t i = 0; i < key_buffer_length; i++) {
+		uint8_t index = Wire.read();
+		bool pressed = Wire.read();
+
+		onKeyChange(index, pressed);
+	}
 }
