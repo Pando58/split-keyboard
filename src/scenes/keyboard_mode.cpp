@@ -1,26 +1,32 @@
 #include "keyboard_mode.h"
 #include "defines.h"
 #include "keyboard_drawing.h"
+#include "keyboard_mode/get_bitmap.h"
+#include "keyboard_mode/layers.h"
 
 KeyboardMode::KeyboardMode(Adafruit_SSD1306 *display0, Adafruit_SSD1306 *display1)
 	: scene::Scene(display0, display1) {}
 
 void KeyboardMode::enter() {
+	m_display0->setRotation(1);
+	m_display1->setRotation(1);
 	m_display0->clearDisplay();
 	m_display1->clearDisplay();
 
 	for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
-		int8_t x = keyboard_drawing::get_position_x(i) + 103;
-		int8_t y = keyboard_drawing::get_position_y(i);
+		int8_t x = keyboard_drawing::get_position_x(i);
+		int8_t y = keyboard_drawing::get_position_y(i) + 24;
 
 		m_display0->drawRect(x, y, 11, 11, SSD1306_WHITE);
+		m_display0->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0[i]), 7, 7, SSD1306_WHITE);
 	}
 
 	for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
-		int8_t x = keyboard_drawing::get_position_x(i, true) + 103;
-		int8_t y = keyboard_drawing::get_position_y(i, true);
+		int8_t x = keyboard_drawing::get_position_x(i, false, true);
+		int8_t y = keyboard_drawing::get_position_y(i, false, true) + 24;
 
 		m_display1->drawRect(x, y, 11, 11, SSD1306_WHITE);
+		m_display1->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0[i + TOTAL_KEYS_ONE_SIDE]), 7, 7, SSD1306_WHITE);
 	}
 
 	m_display0->display();
@@ -30,14 +36,16 @@ void KeyboardMode::enter() {
 void KeyboardMode::loop() {}
 
 void KeyboardMode::onKeyChange(uint8_t index, bool pressed) {
-	bool left_side = index < 25;
-	index %= 25;
+	bool on_left_side = index < 25;
+	uint8_t index_one_side = index % 25;
 
-	int8_t x = keyboard_drawing::get_position_x(index, !left_side) + 103;
-	int8_t y = keyboard_drawing::get_position_y(index, !left_side);
+	int8_t x = keyboard_drawing::get_position_x(index_one_side, false, !on_left_side);
+	int8_t y = keyboard_drawing::get_position_y(index_one_side, false, !on_left_side) + 24;
 
-	Adafruit_SSD1306 *display = left_side ? m_display0 : m_display1;
+	Adafruit_SSD1306 *display = on_left_side ? m_display0 : m_display1;
 
-	display->fillRect(x + 3, y + 3, 5, 5, pressed ? SSD1306_WHITE : SSD1306_BLACK);
+	display->fillRect(x + 1, y + 1, 9, 9, pressed ? SSD1306_WHITE : SSD1306_BLACK);
+	display->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0[index]), 7, 7, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
+	display->drawRect(x, y, 11, 11, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
 	display->display();
 }
