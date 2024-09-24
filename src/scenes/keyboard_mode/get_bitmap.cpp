@@ -1,9 +1,9 @@
 #include "get_bitmap.h"
 #include "bitmaps.h"
 
-const uint8_t (*getKeyBitmap(const KeyType *key))[7] {
-	if (key->type == KeyTypeEnum::Normal) {
-		uint8_t ch = key->value.ch;
+const uint8_t (*getKeyBitmap(const Key *key))[7] {
+	if (key->type == KeyType::Normal) {
+		uint8_t ch = key->value;
 
 		if ((ch >= 97 && ch <= 122)) // 'a' .. 'z'
 			return &key_bitmaps[ch - 64];
@@ -20,7 +20,7 @@ const uint8_t (*getKeyBitmap(const KeyType *key))[7] {
 		if (ch >= 176 && ch <= 179) // KEY_RETURN .. KEY_TAB
 			return &key_bitmaps[ch - 103];
 	} else {
-		return &key_bitmaps[77 + key->value.layer];
+		return &key_bitmaps[77 + key->value];
 	}
 
 	return &key_bitmaps[0];

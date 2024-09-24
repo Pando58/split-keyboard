@@ -1,6 +1,6 @@
 #pragma once
 
-#include "key_type.h"
+#include "key.h"
 #include <Arduino.h>
 
-const uint8_t (*getKeyBitmap(const KeyType *key))[7];
+const uint8_t (*getKeyBitmap(const Key *key))[7];

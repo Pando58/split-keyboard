@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+namespace LayerKey {
+
 enum LayerKey {
 	L4 = 3,
 	L5 = 4,
@@ -13,15 +15,14 @@ enum LayerKey {
 	R6 = 11,
 };
 
-enum class KeyTypeEnum {
+}
+
+enum class KeyType {
 	Normal,
 	Layer,
 };
 
-struct KeyType {
-	KeyTypeEnum type;
-	union {
-		uint8_t ch;
-		LayerKey layer;
-	} value;
+struct Key {
+	KeyType type;
+	uint8_t value;
 };
