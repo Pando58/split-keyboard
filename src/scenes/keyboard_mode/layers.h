@@ -12,9 +12,9 @@ class Layer0 : public Layer {
 	void onKeyChange(uint8_t index, bool pressed) override;
 };
 
-class Layer1 : public Layer {
+class Layer0Shift : public Layer {
   public:
-	Layer1(Layout *layout, Key *keys);
+	Layer0Shift(Layout *layout, Key *keys);
 
 	void onKeyChange(uint8_t index, bool pressed) override;
 };
@@ -30,3 +30,5 @@ class Layer1 : public Layer {
 	}
 
 extern Key layer0_keys[TOTAL_KEYS_BOTH_SIDES];
+
+extern Key layer0_shift_keys[TOTAL_KEYS_BOTH_SIDES];

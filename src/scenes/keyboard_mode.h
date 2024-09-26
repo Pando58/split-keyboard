@@ -9,7 +9,7 @@
 class KeyboardMode : public scene::Scene {
 	Layout m_layout;
 	Layer0 m_layer0;
-	Layer1 m_layer1;
+	Layer0Shift m_layer0_shift;
 	Layer *m_layers[2];
 
   public:
