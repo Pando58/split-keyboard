@@ -22,7 +22,7 @@ class Layout {
 
 	void onKeyChange(uint8_t index, bool pressed);
 
-	static void transition(Layout *layout, uint8_t next_layer);
+	void transition(uint8_t next_layer);
 
 	Key *currentKeys();
 

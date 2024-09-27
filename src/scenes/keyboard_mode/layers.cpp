@@ -8,7 +8,7 @@ void Layer0::onKeyChange(uint8_t index, bool pressed) {
 	Serial.printf("Layer0: %c %s\n", m_keys[index].value, pressed ? "pressed" : "released");
 
 	if (index == 12 && pressed) {
-		Layout::transition(m_layout, 1);
+		m_layout->transition(1);
 	}
 }
 
@@ -19,7 +19,7 @@ void Layer0Shift::onKeyChange(uint8_t index, bool pressed) {
 	Serial.printf("Layer0 (shift): %c %s\n", m_keys[index].value, pressed ? "pressed" : "released");
 
 	if (index == 12 && !pressed) {
-		Layout::transition(m_layout, 0);
+		m_layout->transition(0);
 	}
 }
 
