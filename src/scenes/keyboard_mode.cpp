@@ -8,9 +8,8 @@ void testOnTransition() {
 }
 
 KeyboardMode::KeyboardMode(Adafruit_SSD1306 *display0, Adafruit_SSD1306 *display1)
-	: scene::Scene(display0, display1), m_layer0(&m_layout, layer0_keys), m_layer0_shift(&m_layout, layer0_shift_keys), m_layers{&m_layer0, &m_layer0_shift} {
+	: scene::Scene(display0, display1), m_layout(this), m_layer0(&m_layout, layer0_keys), m_layer0_shift(&m_layout, layer0_shift_keys), m_layers{&m_layer0, &m_layer0_shift} {
 	m_layout.set_layers(*m_layers, 2);
-	m_layout.set_onTransition(testOnTransition);
 }
 
 void KeyboardMode::enter() {
@@ -56,4 +55,8 @@ void KeyboardMode::onKeyChange(uint8_t index, bool pressed) {
 	display->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0_keys[index]), 7, 7, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
 	display->drawRect(x, y, 11, 11, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
 	display->display();
+}
+
+void KeyboardMode::onLayerChange() {
+	Serial.println("Layer change");
 }

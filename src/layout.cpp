@@ -1,13 +1,13 @@
 #include "layout.h"
 
+Layout::Layout(scene::Scene *scn) {
+	m_scene = scn;
+}
+
 void Layout::set_layers(Layer *layers, uint8_t n_layers) {
 	m_layers = layers;
 	m_n_layers = n_layers;
 	m_current_layer = 0;
-}
-
-void Layout::set_onTransition(void (*onTransition)()) {
-	m_onTransition = onTransition;
 }
 
 void Layout::onKeyChange(uint8_t index, bool pressed) {
@@ -35,5 +35,9 @@ void Layout::transition(Layout *layout, uint8_t next) {
 
 	layout->m_current_layer = next;
 
-	layout->m_onTransition();
+	layout->m_scene->onLayerChange();
+}
+
+Key *Layout::currentKeys() {
+	return m_layers[m_current_layer].keys();
 }

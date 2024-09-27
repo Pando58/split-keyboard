@@ -18,6 +18,8 @@ class Scene {
 	virtual void loop() = 0;
 
 	virtual void onKeyChange(uint8_t index, bool pressed) = 0;
+
+	virtual void onLayerChange();
 };
 
 }

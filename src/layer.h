@@ -17,4 +17,6 @@ class Layer {
 	virtual void onKeyChange(uint8_t index, bool pressed) = 0;
 
 	Key getKey(uint8_t index);
+
+	Key *keys();
 };

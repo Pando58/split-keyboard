@@ -20,4 +20,6 @@ class KeyboardMode : public scene::Scene {
 	void loop() override;
 
 	void onKeyChange(uint8_t index, bool pressed) override;
+
+	void onLayerChange() override;
 };
