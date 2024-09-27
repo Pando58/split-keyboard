@@ -18,7 +18,7 @@ void Layout::onKeyChange(uint8_t index, bool pressed) {
 
 void Layout::transition(Layout *layout, uint8_t next) {
 	Layer *previous_layer = &layout->m_layers[layout->m_current_layer];
-	Layer *next_layer = &layout->m_layers[layout->m_current_layer];
+	Layer *next_layer = &layout->m_layers[next];
 
 	for (uint8_t i = 0; i < TOTAL_KEYS_BOTH_SIDES; i++) {
 		if (!layout->m_keys_pressed[i])

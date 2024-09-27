@@ -3,10 +3,6 @@
 #include "keyboard_drawing.h"
 #include "keyboard_mode/get_bitmap.h"
 
-void testOnTransition() {
-	Serial.println("onTransition");
-}
-
 KeyboardMode::KeyboardMode(Adafruit_SSD1306 *display0, Adafruit_SSD1306 *display1)
 	: scene::Scene(display0, display1), m_layout(this), m_layer0(&m_layout, layer0_keys), m_layer0_shift(&m_layout, layer0_shift_keys), m_layers{&m_layer0, &m_layer0_shift} {
 	m_layout.set_layers(*m_layers, 2);
