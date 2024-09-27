@@ -19,8 +19,11 @@ const uint8_t (*getKeyBitmap(const Key *key))[7] {
 
 		if (ch >= 176 && ch <= 179) // KEY_RETURN .. KEY_TAB
 			return &key_bitmaps[ch - 103];
+
+		if (ch == 193) // KEY_RETURN .. KEY_TAB
+			return &key_bitmaps[77];
 	} else {
-		return &key_bitmaps[77 + key->value];
+		return &key_bitmaps[78 + key->value];
 	}
 
 	return &key_bitmaps[0];
