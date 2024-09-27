@@ -19,7 +19,6 @@ void KeyboardMode::enter() {
 		int8_t y = keyboard_drawing::get_position_y(i) + 24;
 
 		m_display0->drawRect(x, y, 11, 11, SSD1306_WHITE);
-		m_display0->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0_keys[i]), 7, 7, SSD1306_WHITE);
 	}
 
 	for (uint8_t i = 0; i < TOTAL_KEYS_ONE_SIDE; i++) {
@@ -27,8 +26,9 @@ void KeyboardMode::enter() {
 		int8_t y = keyboard_drawing::get_position_y(i, false, true) + 24;
 
 		m_display1->drawRect(x, y, 11, 11, SSD1306_WHITE);
-		m_display1->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0_keys[i + TOTAL_KEYS_ONE_SIDE]), 7, 7, SSD1306_WHITE);
 	}
+
+	drawAllKeys();
 
 	m_display0->display();
 	m_display1->display();
@@ -39,6 +39,16 @@ void KeyboardMode::loop() {}
 void KeyboardMode::onKeyChange(uint8_t index, bool pressed) {
 	m_layout.onKeyChange(index, pressed);
 
+	drawKey(index, pressed, true);
+}
+
+void KeyboardMode::onLayerChange() {
+	drawAllKeys();
+}
+
+void KeyboardMode::drawKey(uint8_t index, bool pressed, bool update) {
+	Key *keys = m_layout.currentKeys();
+
 	bool on_left_side = index < 25;
 	uint8_t index_one_side = index % 25;
 
@@ -48,11 +58,19 @@ void KeyboardMode::onKeyChange(uint8_t index, bool pressed) {
 	Adafruit_SSD1306 *display = on_left_side ? m_display0 : m_display1;
 
 	display->fillRect(x + 1, y + 1, 9, 9, pressed ? SSD1306_WHITE : SSD1306_BLACK);
-	display->drawBitmap(x + 2, y + 2, *getKeyBitmap(&layer0_keys[index]), 7, 7, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
-	display->drawRect(x, y, 11, 11, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
-	display->display();
+	display->drawBitmap(x + 2, y + 2, *getKeyBitmap(&keys[index]), 7, 7, !pressed ? SSD1306_WHITE : SSD1306_BLACK);
+
+	if (update)
+		display->display();
 }
 
-void KeyboardMode::onLayerChange() {
-	Serial.println("Layer change");
+void KeyboardMode::drawAllKeys() {
+	bool *keys_pressed = m_layout.currentKeysPressed();
+
+	for (uint8_t i = 0; i < TOTAL_KEYS_BOTH_SIDES; i++) {
+		drawKey(i, keys_pressed[i], false);
+	}
+
+	m_display0->display();
+	m_display1->display();
 }

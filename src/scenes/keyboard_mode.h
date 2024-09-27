@@ -12,6 +12,10 @@ class KeyboardMode : public scene::Scene {
 	Layer0Shift m_layer0_shift;
 	Layer *m_layers[2];
 
+	void drawKey(uint8_t index, bool pressed, bool update);
+
+	void drawAllKeys();
+
   public:
 	KeyboardMode(Adafruit_SSD1306 *display0, Adafruit_SSD1306 *display1);
 

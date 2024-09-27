@@ -41,3 +41,7 @@ void Layout::transition(Layout *layout, uint8_t next) {
 Key *Layout::currentKeys() {
 	return m_layers[m_current_layer].keys();
 }
+
+bool *Layout::currentKeysPressed() {
+	return m_keys_pressed;
+}
