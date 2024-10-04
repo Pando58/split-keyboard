@@ -28,11 +28,18 @@ void setup() {
 }
 
 void loop() {
+}
+
+void loop1() {
 	key_reader.readKeys();
 }
 
 void receiveEvent(int how_many) {
-	esp_i2c_command = Wire.read();
+	if (how_many == 1) {
+		esp_i2c_command = Wire.read();
+	} else if (how_many == 2) {
+		Serial.printf("Key %c %s\n", Wire.read(), Wire.read() ? "pressed" : "released");
+	}
 }
 
 void requestEvent() {

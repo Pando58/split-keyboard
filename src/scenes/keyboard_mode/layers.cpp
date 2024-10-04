@@ -7,6 +7,15 @@ Layer0::Layer0(Layout *layout, Key *keys)
 void Layer0::onKeyChange(uint8_t index, bool pressed) {
 	Serial.printf("Layer0: %c %s\n", m_keys[index].value, pressed ? "pressed" : "released");
 
+	Key *keys = m_layout->currentKeys();
+
+	if (keys[index].type == KeyType::Normal) {
+		Wire.beginTransmission(RP_I2C_ADDRESS);
+		uint8_t data[] = {keys[index].value, pressed};
+		Wire.write(data, 2);
+		Wire.endTransmission();
+	}
+
 	if (index == 12 && pressed) {
 		m_layout->transition(1);
 	}
