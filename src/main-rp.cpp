@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "i2c_commands.h"
 #include "key_reader_serial.h"
 #include <Arduino.h>
 #include <Wire.h>
@@ -34,18 +35,22 @@ void loop1() {
 	key_reader.readKeys();
 }
 
-void receiveEvent(int how_many) {
-	if (how_many == 1) {
-		esp_i2c_command = Wire.read();
-	} else if (how_many == 2) {
+void receiveEvent(int byte_amount) {
+	esp_i2c_command = Wire.read();
+
+	if (byte_amount != command_byte_amount[esp_i2c_command]) {
+		Serial.printf("Amount of bytes doesn't match with command %i: %i != %i\n", esp_i2c_command, byte_amount, command_byte_amount[esp_i2c_command]);
+	}
+
+	if (esp_i2c_command == I2CCommandID::SendKeyThroughUSB) {
 		Serial.printf("Key %c %s\n", Wire.read(), Wire.read() ? "pressed" : "released");
 	}
 }
 
 void requestEvent() {
-	if (esp_i2c_command == 1) {
+	if (esp_i2c_command == I2CCommandID::GetKeyBufferLength) {
 		Wire.write(key_buffer_length);
-	} else if (esp_i2c_command == 2) {
+	} else if (esp_i2c_command == I2CCommandID::GetKeyBuffer) {
 		Wire.write(key_buffer, key_buffer_length * 2);
 		key_buffer_length = 0;
 	}

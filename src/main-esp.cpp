@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "i2c_commands.h"
 #include "key_reader_serial.h"
 #include "scene.h"
 #include "scenes.h"
@@ -47,7 +48,7 @@ void loop() {
 	key_reader.readKeys();
 
 	Wire.beginTransmission(RP_I2C_ADDRESS);
-	Wire.write(1);
+	Wire.write(I2CCommandID::GetKeyBufferLength);
 	Wire.endTransmission();
 
 	Wire.requestFrom(RP_I2C_ADDRESS, 1);
@@ -58,7 +59,7 @@ void loop() {
 		return;
 
 	Wire.beginTransmission(RP_I2C_ADDRESS);
-	Wire.write(2);
+	Wire.write(I2CCommandID::GetKeyBuffer);
 	Wire.endTransmission();
 
 	Wire.requestFrom(RP_I2C_ADDRESS, key_buffer_length * 2);

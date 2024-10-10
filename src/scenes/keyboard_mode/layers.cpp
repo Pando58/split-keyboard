@@ -1,4 +1,5 @@
 #include "layers.h"
+#include "i2c_commands.h"
 #include "key_codes.h"
 
 Layer0::Layer0(Layout *layout, Key *keys)
@@ -11,8 +12,8 @@ void Layer0::onKeyChange(uint8_t index, bool pressed) {
 
 	if (keys[index].type == KeyType::Normal) {
 		Wire.beginTransmission(RP_I2C_ADDRESS);
-		uint8_t data[] = {keys[index].value, pressed};
-		Wire.write(data, 2);
+		uint8_t data[] = {I2CCommandID::SendKeyThroughUSB, keys[index].value, pressed};
+		Wire.write(data, 3);
 		Wire.endTransmission();
 	}
 
